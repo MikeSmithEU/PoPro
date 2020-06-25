@@ -1,0 +1,41 @@
+name: Code quality & unit tests
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+jobs:
+  test:
+    name: Code quality & unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.7.x
+      - name: Build PoPro
+        run: gem build popro.gemspec
+      - name: Install PoPro
+        run: gem install popro-*.gem
+      - name: Rspec
+        run: |
+          mkdir -p test-results
+          gem install rspec rubocop simplecov
+          COVERAGE=true rspec -fd --profile 10 --format html --out rspec_results.html
+      - name: Rubocop
+        run: rubocop --parallel --display-cop-names
+      - name: Upload coverage results
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: coverage
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: rspec_results.html

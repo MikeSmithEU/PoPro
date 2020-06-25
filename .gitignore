@@ -1,0 +1,11 @@
+*.gem
+.ruby-version
+
+/.bundle/
+/vendor/bundle
+/lib/bundler/man/
+
+.rvmrc
+coverage/
+tags
+.byebug_history

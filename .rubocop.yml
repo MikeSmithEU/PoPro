@@ -1,0 +1,13 @@
+AllCops:
+  TargetRubyVersion: 2.7.1
+  NewCops: enable
+Metrics/BlockLength:
+  Enabled: false
+Metrics/MethodLength:
+  Enabled: false
+Style/Documentation:
+  Enabled: false
+Style/FrozenStringLiteralComment:
+  Enabled: true
+  EnforcedStyle: always_true
+  Safe: true
