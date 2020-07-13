@@ -14,8 +14,12 @@ module Popro
     Progress.new(**options, &block)
   end
 
-  def self.each(obj, _total = nil, **options, &block)
+  def self.each(obj, total = nil, **options, &block)
     new(0, **options).each(obj, total, &block).done
+  end
+
+  def self.each_will(obj, titler, total = nil, **options, &block)
+    new(0, **options).each_will(obj, titler, total, &block).done
   end
 
   def self.each0(obj, **options, &block)
