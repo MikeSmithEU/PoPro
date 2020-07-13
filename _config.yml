@@ -1,0 +1,8 @@
+title: Popro
+description: The Poor-Man's Progress Indicator
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-midnight
+
+gems:
+  - jekyll-mentions
