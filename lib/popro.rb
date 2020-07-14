@@ -15,18 +15,12 @@ module Popro
   end
 
   def self.each(obj, total = nil, **options, &block)
+    options[:step] = 0 unless options.key? :step
     new(0, **options).each(obj, total, &block).done
   end
 
   def self.each_will(obj, titler, total = nil, **options, &block)
     new(0, **options).each_will(obj, titler, total, &block).done
-  end
-
-  def self.each0(obj, **options, &block)
-    raise ConfigError, 'using :step is not supported in each0' if options.key?(:step)
-
-    options[:step] = 0
-    each(obj, 0, **options, &block)
   end
 
   def self.command_line(*_args)

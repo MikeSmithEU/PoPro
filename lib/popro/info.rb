@@ -57,7 +57,6 @@ module Popro
 
     def to_h
       {
-        started: @started,
         pct: pct,
         pct_formatted: pct_formatted,
         current: @current,
