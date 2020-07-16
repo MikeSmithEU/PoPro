@@ -1,12 +1,19 @@
 # Po'Pro: The Poor-Man's Progress Indicator
 
+[![Version](https://badge.fury.io/rb/popro.svg)](https://badge.fury.io/rb/popro) 
+[![Tests](https://github.com/MikeSmithEU/PoPro/workflows/Code%20quality%20&%20unit%20tests/badge.svg)](https://github.com/MikeSmithEU/PoPro/actions?query=workflow%3A%22Code+quality+%26+unit+tests%22)
+
+## Current TODOs
+
+ - [ ] properly update documentation
+ - [ ] simplify some stuff (each0?)
+ - [ ] 100% code coverage
+
 ## Why?
 
 Easier and cleaner progress indication.
 
 ## How?
-
-TODO: properly update documentation, simplify some stuff. 100% code coverage
 
 ### Basic usage
 
@@ -263,11 +270,11 @@ end
 ## Formatters
 
 You can set your own formatters using `Popro#formatter(&block)`. Each formatter can be a `Proc`, `block` or
-class implementing the `call` method (e.g. the `PoproFormatter::*` classes).
+class implementing the `call` method (e.g. the `Popro::Formatter::*` classes).
 
 The formatter will be invoked with 2 arguments:
 
-  1. `info`, an instance of `PoproInfo` containing e.g. `current` and `total`.
+  1. `info`, an instance of `Popro::Info` containing e.g. `current` and `total`.
   2. `yielded`, whatever was passed to the `Popro#did` method.
 
 It can also be used inside blocks.
@@ -315,7 +322,7 @@ would output:
 
 Indicator classes are responsible for communicating the progress (or not, as the case may be).
 
-It is possible to provide your own "indicators" or use one of the provided ones (see `PoproIndicator` module).
+It is possible to provide your own "indicators" or use one of the provided ones (see `Popro::Indicator` module).
 
-The default `PoproIndicator` class is `PoproIndicator.default` (which returns an instance of `PoproIndicator::Stream`), which outputs the progress to STDOUT each time `Popro#did` or `Popro#will` is called.
+The default `Popro::Indicator` class is `Popro::Indicator.default` (which returns an instance of `Popro::Indicator::Stream`), which outputs the progress to STDOUT each time `Popro#did` or `Popro#will` is called.
 
