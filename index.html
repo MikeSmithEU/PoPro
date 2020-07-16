@@ -1,0 +1,292 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Popro by MikeSmithEU</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/MikeSmithEU/PoPro">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/MikeSmithEU/PoPro/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/MikeSmithEU/PoPro/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Popro</h1>
+          <p>The Poor-Man&#39;s Progress Indicator</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/MikeSmithEU">MikeSmithEU</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
+<a id="popro-the-poor-mans-progress-indicator" class="anchor" href="#popro-the-poor-mans-progress-indicator" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Po'Pro: The Poor-Man's Progress Indicator</h1>
+<p><a href="https://badge.fury.io/rb/popro"><img src="https://badge.fury.io/rb/popro.svg" alt="Version"></a>
+<a href="https://github.com/MikeSmithEU/PoPro/actions?query=workflow%3A%22Code+quality+%26+unit+tests%22"><img src="https://github.com/MikeSmithEU/PoPro/workflows/Code%20quality%20&amp;%20unit%20tests/badge.svg" alt="Tests"></a></p>
+<h2>
+<a id="current-todos" class="anchor" href="#current-todos" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Current TODOs</h2>
+<ul>
+<li>[ ] properly update documentation</li>
+<li>[ ] simplify some stuff (each0?)</li>
+<li>[ ] 100% code coverage</li>
+</ul>
+<h2>
+<a id="why" class="anchor" href="#why" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Why?</h2>
+<p>Easier and cleaner progress indication.</p>
+<h2>
+<a id="how" class="anchor" href="#how" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How?</h2>
+<h3>
+<a id="basic-usage" class="anchor" href="#basic-usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Basic usage</h3>
+<p>The invocation <code>Popro#did(yielded)</code> is used to signify that one step in progress has been finished.</p>
+<ol>
+<li>
+<p>Create a <code>Progress</code> object</p>
+<div class="highlight highlight-source-ruby"><pre><span class="pl-s1">progress</span> <span class="pl-c1">=</span> <span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">new</span><span class="pl-kos">(</span><span class="pl-c1">500</span><span class="pl-kos">)</span></pre></div>
+</li>
+<li>
+<p>Use the progress indicator</p>
+</li>
+</ol>
+<div class="highlight highlight-source-ruby"><pre><span class="pl-kos">(</span><span class="pl-c1">0</span>..<span class="pl-c1">499</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">each</span> <span class="pl-kos">{</span> <span class="pl-en">progress</span><span class="pl-kos">.</span><span class="pl-en">did</span> <span class="pl-kos">}</span></pre></div>
+<p>Will result in a default progress outputted to STDOUT, e.g.</p>
+<div class="highlight highlight-source-shell"><pre>irb<span class="pl-k">&gt;</span> (0..499).each { <span class="pl-k">|</span>n<span class="pl-k">|</span> sleep(0.1) <span class="pl-k">&amp;</span> <span class="pl-s"><span class="pl-pds">"</span>Just did #{n}<span class="pl-pds">"</span></span> }
+[221/500] 44.2% Just did 220</pre></div>
+<p>Note, <code>Popro#did</code> can be passed as a <code>Proc</code> using the shortcut <code>&amp;progress</code>.
+So below code would be equivalent and slightly more concise:</p>
+<div class="highlight highlight-source-ruby"><pre><span class="pl-kos">(</span><span class="pl-c1">0.499</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">each</span> &amp;<span class="pl-en">progress</span></pre></div>
+<p>Block notation is usually preferable (cleaner) to using the <code>Progress</code> instance directly (see below).
+The functionality is the same though.</p>
+<h3>
+<a id="using-block-context" class="anchor" href="#using-block-context" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using block context</h3>
+<p><code>Popro.new</code> can be called with a block. This block will then be executed after <code>Progress</code> has initialized
+and will receive a <code>Context</code> instance as the first parameter.  On this instance you can call e.g.
+<code>each</code>, <code>did</code>, <code>will</code> and <code>formatter</code>.</p>
+<p>E.g.</p>
+<div class="highlight highlight-source-ruby"><pre><span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">new</span><span class="pl-kos">(</span><span class="pl-c1">500</span><span class="pl-kos">)</span> <span class="pl-k">do</span> |<span class="pl-s1">p</span>|
+  <span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">500</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">each</span> &amp;<span class="pl-s1">p</span>
+<span class="pl-k">end</span></pre></div>
+<p>or</p>
+<div class="highlight highlight-source-ruby"><pre><span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">new</span> <span class="pl-k">do</span> |<span class="pl-s1">progress</span>|
+  <span class="pl-s1">progress</span><span class="pl-kos">.</span><span class="pl-en">each</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">500</span><span class="pl-kos">)</span>
+<span class="pl-k">end</span></pre></div>
+<h3>
+<a id="using-proc-shortcut-notation" class="anchor" href="#using-proc-shortcut-notation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using <code>Proc</code> shortcut notation</h3>
+<p><code>&amp;Popro.new</code>  can be used for a more concise syntax. This is just syntactical sugar for calling
+<code>Popro#did</code> directly.</p>
+<p>For example:</p>
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">def</span> <span class="pl-en">job</span><span class="pl-kos">(</span><span class="pl-s1">size</span><span class="pl-c1">=</span><span class="pl-c1">100</span><span class="pl-kos">)</span>
+  <span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-s1">size</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">each</span> <span class="pl-k">do</span>
+    <span class="pl-en">sleep</span> <span class="pl-c1">0.01</span>
+    <span class="pl-k">yield</span>
+  <span class="pl-k">end</span>
+<span class="pl-k">end</span>
+
+<span class="pl-c"># Below invocations are all equivalent.</span>
+
+<span class="pl-en">puts</span> <span class="pl-s">"<span class="pl-cce">\n</span> job(&amp;progress)"</span>
+<span class="pl-s1">progress</span> <span class="pl-c1">=</span> <span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">new</span><span class="pl-kos">(</span><span class="pl-c1">100</span><span class="pl-kos">)</span>
+<span class="pl-en">job</span><span class="pl-kos">(</span>&amp;<span class="pl-s1">progress</span><span class="pl-kos">)</span>
+
+<span class="pl-en">puts</span> <span class="pl-s">"<span class="pl-cce">\n</span> job { progress.did }"</span>
+<span class="pl-s1">progress</span> <span class="pl-c1">=</span> <span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">new</span><span class="pl-kos">(</span><span class="pl-c1">100</span><span class="pl-kos">)</span>
+<span class="pl-en">job</span> <span class="pl-kos">{</span> <span class="pl-s1">progress</span><span class="pl-kos">.</span><span class="pl-en">did</span> <span class="pl-kos">}</span>
+
+<span class="pl-en">puts</span> <span class="pl-s">"<span class="pl-cce">\n</span> using Popro.new(100)"</span>
+
+<span class="pl-c"># below code is a more concise equivalent to:</span>
+<span class="pl-c">#   `progress = Popro.new(100); job &amp;progress`</span>
+<span class="pl-c"># or</span>
+<span class="pl-c">#   `progress = Popro.new(100); job { |*args| progress.did(*args) }`</span>
+
+<span class="pl-en">job</span><span class="pl-kos">(</span>&amp;<span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">new</span><span class="pl-kos">(</span><span class="pl-c1">100</span><span class="pl-kos">)</span><span class="pl-kos">)</span></pre></div>
+<h3>
+<a id="using-each-notation" class="anchor" href="#using-each-notation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using each notation</h3>
+<p><code>Popro.each</code> or <code>Popro#each</code> can be used to loop over enumerables while providing progress
+feedback.</p>
+<p><code>Popro.each(enumerable, size=nil)</code> will use <code>enumerable.size</code> to determine the total amount of elements
+only if the <code>size</code> argument is <code>nil</code>.
+If this method is not available you should manually provide a <code>size</code> argument, i.e.  <code>Popro.each(enumerable, 50)</code>.</p>
+<p>Shortcut methods <code>Popro.each0(enumerable)</code> and <code>Popro#each0(enumerable)</code> are available for enumerables
+that are used if you do not want to update the total with <code>enumerable.size</code>.
+I.e. this is equivalent to <code>Popro.each(enumerable, 0)</code> and <code>Popro#each(enumerable, 0)</code> respectively.</p>
+<p>E.g. below are all equivalent.</p>
+<div class="highlight highlight-source-ruby"><pre><span class="pl-s1">sleeper</span> <span class="pl-c1">=</span> <span class="pl-en">proc</span> <span class="pl-kos">{</span> <span class="pl-en">sleep</span> <span class="pl-c1">0.05</span> <span class="pl-kos">}</span>
+
+<span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">each</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">50</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> <span class="pl-en">sleep</span> <span class="pl-c1">0.05</span> <span class="pl-kos">}</span>
+<span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">new</span><span class="pl-kos">.</span><span class="pl-en">each</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">50</span><span class="pl-kos">,</span> <span class="pl-c1">50</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> <span class="pl-en">sleep</span> <span class="pl-c1">0.05</span> <span class="pl-kos">}</span>
+<span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">new</span><span class="pl-kos">(</span><span class="pl-c1">50</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">each</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">50</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> <span class="pl-en">sleep</span> <span class="pl-c1">0.05</span> <span class="pl-kos">}</span>
+<span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">new</span><span class="pl-kos">(</span><span class="pl-c1">50</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">each0</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">50</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> <span class="pl-en">sleep</span> <span class="pl-c1">0.05</span> <span class="pl-kos">}</span>
+
+<span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">each</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">50</span><span class="pl-kos">,</span> &amp;<span class="pl-s1">sleeper</span><span class="pl-kos">)</span>
+<span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">new</span><span class="pl-kos">(</span><span class="pl-c1">50</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">each</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">50</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> &amp;<span class="pl-s1">sleeper</span><span class="pl-kos">)</span>
+<span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">new</span><span class="pl-kos">(</span><span class="pl-c1">50</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">each0</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">50</span><span class="pl-kos">,</span> &amp;<span class="pl-s1">sleeper</span><span class="pl-kos">)</span>
+
+<span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">each</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">50</span><span class="pl-kos">,</span> <span class="pl-c1">50</span><span class="pl-kos">,</span> &amp;<span class="pl-s1">sleeper</span><span class="pl-kos">)</span>
+<span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">new</span><span class="pl-kos">.</span><span class="pl-en">each</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">50</span><span class="pl-kos">,</span> <span class="pl-c1">50</span><span class="pl-kos">,</span> &amp;<span class="pl-s1">sleeper</span><span class="pl-kos">)</span></pre></div>
+<p>It is easy to chain multiple items, the total will be updated at the start of each <code>each</code> block. It
+might be preferable to provide a total sum in advance, and passing a <code>size</code> argument of <code>0</code> to
+<code>Popro#each</code> (or using <code>Popro#each0</code>), e.g.</p>
+<div class="highlight highlight-source-ruby"><pre>
+<span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">new</span><span class="pl-kos">(</span><span class="pl-c1">200</span><span class="pl-kos">)</span>
+  <span class="pl-kos">.</span><span class="pl-en">each0</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">50</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> |<span class="pl-s1">n</span>| <span class="pl-en">sleep</span><span class="pl-kos">(</span><span class="pl-c1">0.1</span><span class="pl-kos">)</span> &amp;&amp; <span class="pl-s">"<span class="pl-s1"><span class="pl-kos">#{</span><span class="pl-s1">n</span><span class="pl-kos">}</span></span> of first 50"</span> <span class="pl-kos">}</span>
+  <span class="pl-kos">.</span><span class="pl-en">each0</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">100</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> |<span class="pl-s1">n</span>| <span class="pl-en">sleep</span><span class="pl-kos">(</span><span class="pl-c1">0.1</span><span class="pl-kos">)</span> &amp;&amp; <span class="pl-s">"<span class="pl-s1"><span class="pl-kos">#{</span><span class="pl-s1">n</span><span class="pl-kos">}</span></span> of second 100"</span> <span class="pl-kos">}</span>
+  <span class="pl-kos">.</span><span class="pl-en">each0</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">50</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> |<span class="pl-s1">n</span>| <span class="pl-en">sleep</span><span class="pl-kos">(</span><span class="pl-c1">0.1</span><span class="pl-kos">)</span> &amp;&amp; <span class="pl-s">"<span class="pl-s1"><span class="pl-kos">#{</span><span class="pl-s1">n</span><span class="pl-kos">}</span></span> of last 50"</span> <span class="pl-kos">}</span></pre></div>
+<p>Or, using a block:</p>
+<div class="highlight highlight-source-ruby"><pre>
+<span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">new</span><span class="pl-kos">(</span><span class="pl-c1">200</span><span class="pl-kos">)</span> <span class="pl-k">do</span> |<span class="pl-s1">p</span>|
+  <span class="pl-s1">p</span><span class="pl-kos">.</span><span class="pl-en">each0</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">50</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> |<span class="pl-s1">n</span>| <span class="pl-en">sleep</span><span class="pl-kos">(</span><span class="pl-c1">0.1</span><span class="pl-kos">)</span> &amp;&amp; <span class="pl-s">"<span class="pl-s1"><span class="pl-kos">#{</span><span class="pl-s1">n</span><span class="pl-kos">}</span></span> of first 50"</span> <span class="pl-kos">}</span>
+  <span class="pl-s1">p</span><span class="pl-kos">.</span><span class="pl-en">each0</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">100</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> |<span class="pl-s1">n</span>| <span class="pl-en">sleep</span><span class="pl-kos">(</span><span class="pl-c1">0.1</span><span class="pl-kos">)</span> &amp;&amp; <span class="pl-s">"<span class="pl-s1"><span class="pl-kos">#{</span><span class="pl-s1">n</span><span class="pl-kos">}</span></span> of second 100"</span> <span class="pl-kos">}</span>
+  <span class="pl-s1">p</span><span class="pl-kos">.</span><span class="pl-en">each0</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">50</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> |<span class="pl-s1">n</span>| <span class="pl-en">sleep</span><span class="pl-kos">(</span><span class="pl-c1">0.1</span><span class="pl-kos">)</span> &amp;&amp; <span class="pl-s">"<span class="pl-s1"><span class="pl-kos">#{</span><span class="pl-s1">n</span><span class="pl-kos">}</span></span> of last 50"</span> <span class="pl-kos">}</span>
+<span class="pl-k">end</span></pre></div>
+<p>Note that when using <code>Popro.each(enumberable, &amp;block)</code> or <code>Popro#each(enumerable, &amp;block)</code> the arguments
+passed to <code>block</code> on invocation are not the same as for <code>Popro.new</code>.</p>
+<p><code>Popro.each</code> invokes <code>enumerable.each</code> and the argument signature of the <code>Popro.each</code> <code>&amp;block</code> is the
+same as the signature that <code>enumerable.each</code> uses to call the block. Only the named argument <code>progress</code> is
+added (as opposed to being the first argument as for <code>Popro.new</code>).</p>
+<p>E.g.</p>
+<div class="highlight highlight-source-ruby"><pre>
+<span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">each</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">100</span><span class="pl-kos">)</span> <span class="pl-k">do</span> |<span class="pl-s1">number</span><span class="pl-kos">,</span> <span class="pl-s1">progress</span>:|
+  <span class="pl-s1">progress</span><span class="pl-kos">.</span><span class="pl-en">will</span> <span class="pl-s">"count sheep #<span class="pl-s1"><span class="pl-kos">#{</span><span class="pl-s1">number</span><span class="pl-kos">}</span></span> and sleep for a bit"</span> <span class="pl-k">do</span>
+    <span class="pl-en">sleep</span> <span class="pl-c1">0.1</span>
+  <span class="pl-k">end</span>
+<span class="pl-k">end</span></pre></div>
+<p>would be equivalent to:</p>
+<div class="highlight highlight-source-ruby"><pre>
+<span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">new</span><span class="pl-kos">(</span><span class="pl-c1">100</span><span class="pl-kos">)</span> <span class="pl-k">do</span> |<span class="pl-s1">p</span>|
+  <span class="pl-s1">p</span><span class="pl-kos">.</span><span class="pl-en">each</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">100</span><span class="pl-kos">)</span> <span class="pl-k">do</span> |<span class="pl-s1">number</span><span class="pl-kos">,</span> <span class="pl-s1">progress</span>:|
+    <span class="pl-c"># note, `p == progress`, only added `progress:` to `each` call for example purposes</span>
+    <span class="pl-s1">p</span><span class="pl-kos">.</span><span class="pl-en">will</span> <span class="pl-s">"count sheep #<span class="pl-s1"><span class="pl-kos">#{</span><span class="pl-s1">number</span><span class="pl-kos">}</span></span> and sleep for a bit"</span> <span class="pl-k">do</span>
+      <span class="pl-en">sleep</span> <span class="pl-c1">0.1</span>
+    <span class="pl-k">end</span>
+  <span class="pl-k">end</span>
+<span class="pl-k">end</span></pre></div>
+<h3>
+<a id="using-poprowill" class="anchor" href="#using-poprowill" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using <code>Popro#will</code>
+</h3>
+<p>The helper <code>Popro#will(message, &amp;block)</code> can be used to signify intention. When given a block, it will mark
+this intention as done when the block has finished (using a call to <code>Popro#did</code>). If no block is passed,
+<code>Popro#did</code> needs to be invoked manually once the intention has been fulfilled.</p>
+<p>This method sends the <code>message</code> passed to <code>Popro#will</code> to the <code>Indicator</code> so it can handle it (usually output to
+screen).</p>
+<p>Thus <code>Popro#will</code> can be used to signify the action about to take place instead of the action that has just finished.
+If the script encounters some kind of error, we can now see in which context this error occured instead of seeing
+the last invocation that did not cause an error.</p>
+<p>E.g.</p>
+<div class="highlight highlight-source-ruby"><pre><span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">each</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">200</span><span class="pl-kos">)</span> <span class="pl-k">do</span> |<span class="pl-s1">progress</span>:|
+  <span class="pl-s1">progress</span><span class="pl-kos">.</span><span class="pl-en">will</span> <span class="pl-s">"sleep a bit"</span> <span class="pl-k">do</span>
+    <span class="pl-en">sleep</span> <span class="pl-c1">0.1</span>
+  <span class="pl-k">end</span>
+<span class="pl-k">end</span>
+
+<span class="pl-c"># equivalent to</span>
+
+<span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">new</span><span class="pl-kos">(</span><span class="pl-c1">200</span><span class="pl-kos">)</span> <span class="pl-k">do</span> |<span class="pl-s1">p</span>|
+  <span class="pl-c1">200</span><span class="pl-kos">.</span><span class="pl-en">times</span> <span class="pl-k">do</span>
+    <span class="pl-s1">p</span><span class="pl-kos">.</span><span class="pl-en">will</span> <span class="pl-s">"sleep a bit"</span> <span class="pl-k">do</span>
+      <span class="pl-en">sleep</span> <span class="pl-c1">0.01</span>
+    <span class="pl-k">end</span>
+  <span class="pl-k">end</span>
+<span class="pl-k">end</span>
+
+<span class="pl-c"># equivalent to</span>
+
+<span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">new</span><span class="pl-kos">(</span><span class="pl-c1">200</span><span class="pl-kos">)</span> <span class="pl-k">do</span> |<span class="pl-s1">p</span>|
+  <span class="pl-c1">200</span><span class="pl-kos">.</span><span class="pl-en">times</span> <span class="pl-k">do</span>
+    <span class="pl-s1">p</span><span class="pl-kos">.</span><span class="pl-en">will</span> <span class="pl-s">"sleep a bit"</span>
+    <span class="pl-en">sleep</span> <span class="pl-c1">0.01</span>
+    <span class="pl-s1">p</span><span class="pl-kos">.</span><span class="pl-en">done</span> <span class="pl-s">"sleep a bit: DONE"</span>
+  <span class="pl-k">end</span>
+<span class="pl-k">end</span></pre></div>
+<h3>
+<a id="using-poproeach_will" class="anchor" href="#using-poproeach_will" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using <code>Popro.each_will</code>
+</h3>
+<p><code>Popro.each_will(enumerator, titler, size = nil, &amp;block)</code> is a shortcut for:</p>
+<div class="highlight highlight-source-ruby"><pre><span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">each</span><span class="pl-kos">(</span><span class="pl-en">enumerator</span><span class="pl-kos">,</span> <span class="pl-en">size</span><span class="pl-kos">)</span> <span class="pl-k">do</span> |*<span class="pl-s1">args</span><span class="pl-kos">,</span> **<span class="pl-s1">kwargs</span><span class="pl-kos">,</span> <span class="pl-s1">progress</span>:|
+  <span class="pl-s1">progress</span><span class="pl-kos">.</span><span class="pl-en">will</span> <span class="pl-en">titler</span><span class="pl-kos">.</span><span class="pl-en">call</span><span class="pl-kos">(</span>*<span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-k">do</span>
+    <span class="pl-en">block</span><span class="pl-kos">.</span><span class="pl-en">call</span><span class="pl-kos">(</span>*<span class="pl-s1">args</span><span class="pl-kos">,</span> **<span class="pl-s1">kwargs</span><span class="pl-kos">)</span>
+  <span class="pl-k">end</span>
+<span class="pl-k">end</span></pre></div>
+<p>So instead of e.g.</p>
+<div class="highlight highlight-source-ruby"><pre><span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">each</span><span class="pl-kos">(</span><span class="pl-v">SomeModel</span><span class="pl-kos">.</span><span class="pl-en">all</span><span class="pl-kos">)</span> <span class="pl-k">do</span> |<span class="pl-s1">model</span><span class="pl-kos">,</span> <span class="pl-s1">progress</span>:|
+  <span class="pl-s1">progress</span><span class="pl-kos">.</span><span class="pl-en">will</span> <span class="pl-s">"Delete <span class="pl-s1"><span class="pl-kos">#{</span><span class="pl-s1">model</span><span class="pl-kos">.</span><span class="pl-en">id</span><span class="pl-kos">}</span></span>"</span> <span class="pl-k">do</span>
+    <span class="pl-s1">model</span><span class="pl-kos">.</span><span class="pl-en">destroy</span>
+  <span class="pl-k">end</span>
+<span class="pl-k">end</span></pre></div>
+<p>A more concise syntax is available:</p>
+<div class="highlight highlight-source-ruby"><pre><span class="pl-s1">titler</span> <span class="pl-c1">=</span> <span class="pl-c1">-&gt;</span><span class="pl-kos">(</span><span class="pl-s1">model</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> <span class="pl-s">"Delete <span class="pl-s1"><span class="pl-kos">#{</span><span class="pl-s1">model</span><span class="pl-kos">.</span><span class="pl-en">id</span><span class="pl-kos">}</span></span>"</span> <span class="pl-kos">}</span>
+<span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">each_will</span><span class="pl-kos">(</span><span class="pl-v">SomeModel</span><span class="pl-kos">.</span><span class="pl-en">all</span><span class="pl-kos">,</span> <span class="pl-s1">titler</span><span class="pl-kos">)</span> <span class="pl-k">do</span> |<span class="pl-s1">model</span>|
+  <span class="pl-s1">model</span><span class="pl-kos">.</span><span class="pl-en">destroy</span>
+<span class="pl-k">end</span></pre></div>
+<h2>
+<a id="formatters" class="anchor" href="#formatters" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Formatters</h2>
+<p>You can set your own formatters using <code>Popro#formatter(&amp;block)</code>. Each formatter can be a <code>Proc</code>, <code>block</code> or
+class implementing the <code>call</code> method (e.g. the <code>Popro::Formatter::*</code> classes).</p>
+<p>The formatter will be invoked with 2 arguments:</p>
+<ol>
+<li>
+<code>info</code>, an instance of <code>Popro::Info</code> containing e.g. <code>current</code> and <code>total</code>.</li>
+<li>
+<code>yielded</code>, whatever was passed to the <code>Popro#did</code> method.</li>
+</ol>
+<p>It can also be used inside blocks.</p>
+<p>E.g.</p>
+<div class="highlight highlight-source-ruby"><pre>
+<span class="pl-s1">progress</span> <span class="pl-c1">=</span> <span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">new</span>
+<span class="pl-s1">progress</span><span class="pl-kos">.</span><span class="pl-en">formatter</span> <span class="pl-k">do</span> |<span class="pl-s1">info</span><span class="pl-kos">,</span> <span class="pl-s1">yielded</span>|
+  <span class="pl-s">"<span class="pl-s1"><span class="pl-kos">#{</span><span class="pl-s1">info</span><span class="pl-kos">.</span><span class="pl-en">current</span><span class="pl-kos">}</span></span>, yielded <span class="pl-s1"><span class="pl-kos">#{</span><span class="pl-s1">yielded</span><span class="pl-kos">}</span></span><span class="pl-cce">\n</span>"</span>
+<span class="pl-k">end</span>
+<span class="pl-s1">progress</span><span class="pl-kos">.</span><span class="pl-en">each</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">8</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> |<span class="pl-s1">i</span>| <span class="pl-s1">i</span>**<span class="pl-c1">2</span> <span class="pl-kos">}</span>
+<span class="pl-s1">progress</span><span class="pl-kos">.</span><span class="pl-en">formatter</span> <span class="pl-kos">{</span> <span class="pl-s">"."</span> <span class="pl-kos">}</span> <span class="pl-c"># output a dot</span>
+<span class="pl-s1">progress</span><span class="pl-kos">.</span><span class="pl-en">each</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">8</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> |<span class="pl-s1">i</span>| <span class="pl-s1">i</span>**<span class="pl-c1">2</span> <span class="pl-kos">}</span>
+
+<span class="pl-c"># or equivalent, more concise:</span>
+
+<span class="pl-v">Popro</span><span class="pl-kos">.</span><span class="pl-en">new</span> <span class="pl-k">do</span> |<span class="pl-s1">p</span>|
+  <span class="pl-s1">p</span><span class="pl-kos">.</span><span class="pl-en">formatter</span> <span class="pl-kos">{</span> |<span class="pl-s1">info</span><span class="pl-kos">,</span> <span class="pl-s1">yielded</span>| <span class="pl-s">"<span class="pl-s1"><span class="pl-kos">#{</span><span class="pl-s1">info</span><span class="pl-kos">.</span><span class="pl-en">current</span><span class="pl-kos">}</span></span>, yielded <span class="pl-s1"><span class="pl-kos">#{</span><span class="pl-s1">yielded</span><span class="pl-kos">}</span></span><span class="pl-cce">\n</span>"</span> <span class="pl-kos">}</span>
+  <span class="pl-s1">p</span><span class="pl-kos">.</span><span class="pl-en">each</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">8</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> |<span class="pl-s1">i</span>| <span class="pl-s1">i</span>**<span class="pl-c1">2</span> <span class="pl-kos">}</span>
+
+  <span class="pl-s1">p</span><span class="pl-kos">.</span><span class="pl-en">formatter</span> <span class="pl-kos">{</span> <span class="pl-s">"."</span> <span class="pl-kos">}</span> <span class="pl-c"># output a dot</span>
+  <span class="pl-s1">p</span><span class="pl-kos">.</span><span class="pl-en">each</span><span class="pl-kos">(</span><span class="pl-c1">1</span>..<span class="pl-c1">8</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> |<span class="pl-s1">i</span>| <span class="pl-s1">i</span>**<span class="pl-c1">2</span> <span class="pl-kos">}</span>
+<span class="pl-k">end</span></pre></div>
+<p>would output:</p>
+<pre><code> 1, yielded 1
+ 2, yielded 4
+ 3, yielded 9
+ 4, yielded 16
+ 5, yielded 25
+ 6, yielded 36
+ 7, yielded 49
+ 8, yielded 64
+ ........
+</code></pre>
+<h2>
+<a id="indicator-classes" class="anchor" href="#indicator-classes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Indicator Classes</h2>
+<p>Indicator classes are responsible for communicating the progress (or not, as the case may be).</p>
+<p>It is possible to provide your own "indicators" or use one of the provided ones (see <code>Popro::Indicator</code> module).</p>
+<p>The default <code>Popro::Indicator</code> class is <code>Popro::Indicator.default</code> (which returns an instance of <code>Popro::Indicator::Stream</code>), which outputs the progress to STDOUT each time <code>Popro#did</code> or <code>Popro#will</code> is called.</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
