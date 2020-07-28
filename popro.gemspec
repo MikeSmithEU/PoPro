@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name        = 'popro'
-  s.version     = '0.1.1'
+  s.version     = '0.1.2'
   s.date        = '2020-06-01'
   s.summary     = "Po'Pro"
   s.description = "The Poor-Man's Progress Indicator"
