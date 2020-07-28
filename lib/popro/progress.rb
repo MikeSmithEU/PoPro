@@ -21,9 +21,10 @@ module Popro
       @info = Info.new(total: options.delete(:total), current: options.delete(:current))
 
       options[:step] ||= (block_given? ? 0 : 1)
-      indicator = Indicator.default unless options.key? :indicator
 
-      options.merge!(progress: self, info: @info, indicator: indicator)
+      options[:indicator] = Indicator.default unless options.key? :indicator
+
+      options.merge!(progress: self, info: @info)
       @context = Context.new(**options)
 
       register_aliases
