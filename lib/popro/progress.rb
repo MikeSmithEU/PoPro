@@ -14,16 +14,13 @@ module Popro
     attr_reader :context
 
     def initialize(**options)
-      options.merge!(DEFAULT_OPTIONS)
-
       @started = false
 
+      options.merge!(DEFAULT_OPTIONS)
       @info = Info.new(total: options.delete(:total), current: options.delete(:current))
 
       options[:step] ||= (block_given? ? 0 : 1)
-
       options[:indicator] = Indicator.default unless options.key? :indicator
-
       options.merge!(progress: self, info: @info)
       @context = Context.new(**options)
 
