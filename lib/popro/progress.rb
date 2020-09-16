@@ -43,7 +43,7 @@ module Popro
 
     def register_aliases
       class << self
-        %i[each each_will to_proc did will formatter start done].each do |method_name|
+        %i[each each_will each_gonna to_proc gonna will did formatter start done].each do |method_name|
           define_method method_name do |*args, &block|
             @context.public_send(method_name, *args, &block)
           end

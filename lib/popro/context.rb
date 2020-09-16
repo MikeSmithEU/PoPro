@@ -62,8 +62,20 @@ module Popro
       self
     end
 
+    def gonna(title)
+      @indicator.call(@info, title)
+      self
+    end
+
+    def each_gonna(obj, titler, total = nil, &block)
+      _each(obj, total) do |*args|
+        gonna(titler.call(*args))
+        block.call(*args, progress: @info) if block_given?
+      end
+    end
+
     def will(title = nil, step = nil, &block)
-      did "#{WILL_CHECK_MARKS[0]} #{title}", 0
+      gonna "#{WILL_CHECK_MARKS[0]} #{title}"
 
       return self unless block_given?
 

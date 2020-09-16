@@ -22,6 +22,10 @@ module Popro
     new(0, **options).each_will(obj, titler, total, &block).done
   end
 
+  def self.each_gonna(obj, titler, total = nil, **options, &block)
+    new(0, **options).each_gonna(obj, titler, total, &block).done
+  end
+
   def self.command_line(*_args)
     raise 'TODO: implement a `ps` style progress indicator for command line'
   end

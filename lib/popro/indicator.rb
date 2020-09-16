@@ -45,6 +45,21 @@ module Popro
       end
     end
 
+    class Callback
+      def initialize(finish = nil, &block)
+        @finish = finish
+        @callback = block
+      end
+
+      def call(*args)
+        @callback.call(*args)
+      end
+
+      def finish
+        @finish&.call
+      end
+    end
+
     def self.default_formatter(*extra_formatters)
       ::Popro::Formatter::RewriteLine.new(
         ::Popro::Formatter::Concat.new(

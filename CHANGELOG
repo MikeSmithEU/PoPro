@@ -1,3 +1,4 @@
+0.2.2 add gonna and each_gonna, add Callback Indicator
 0.2.1 add support for estimation and re-use of default indicator with added concatted formatters
 0.2.0 various fixes and added unit tests
 0.0.1 initial version
