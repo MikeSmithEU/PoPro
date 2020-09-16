@@ -3,17 +3,21 @@
 require 'spec_helper'
 require 'popro'
 
-RSpec.describe Popro do
-  class Indicator
-    def call(info, yielded)
-      "[#{info.current}/#{info.total}] #{yielded}"
-    end
-
-    def finish
-      nil
-    end
+class IndicatorStub
+  def call(info, yielded)
+    "[#{info.current}/#{info.total}] #{yielded}"
   end
 
+  def finish
+    nil
+  end
+end
+
+RSpec.shared_examples "normal progress indication" do
+
+end
+
+RSpec.describe Popro do
   it 'checks all methods are available' do
     expect(described_class).to respond_to(:new)
     expect(described_class).to respond_to(:each)
@@ -21,7 +25,7 @@ RSpec.describe Popro do
   end
 
   let(:iterable) { (0..9) }
-  let(:indicator) { Indicator.new }
+  let(:indicator) { IndicatorStub.new }
 
   it 'supports each' do
     # expect these indications
@@ -62,5 +66,8 @@ RSpec.describe Popro do
 
     described_class.each_will(iterable, titler, indicator: indicator) do
     end
+  end
+
+  it "tests" do
   end
 end

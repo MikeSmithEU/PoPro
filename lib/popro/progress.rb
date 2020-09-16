@@ -9,6 +9,7 @@ module Popro
     DEFAULT_OPTIONS ||= {
       total: 0,
       current: 0,
+      indicator: Indicator.default
     }.freeze
 
     attr_reader :context
@@ -16,11 +17,12 @@ module Popro
     def initialize(**options)
       @started = false
 
-      options.merge!(DEFAULT_OPTIONS)
+      options = DEFAULT_OPTIONS
+                .merge(step: block_given? ? 0 : 1)
+                .merge(options)
+
       @info = Info.new(total: options.delete(:total), current: options.delete(:current))
 
-      options[:step] ||= (block_given? ? 0 : 1)
-      options[:indicator] = Indicator.default unless options.key? :indicator
       options.merge!(progress: self, info: @info)
       @context = Context.new(**options)
 

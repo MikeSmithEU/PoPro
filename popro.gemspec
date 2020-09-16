@@ -2,8 +2,8 @@
 
 Gem::Specification.new do |s|
   s.name        = 'popro'
-  s.version     = '0.1.3'
-  s.date        = '2020-06-01'
+  s.version     = '0.2.0'
+  s.date        = '2020-09-16'
   s.summary     = "Po'Pro"
   s.description = "The Poor-Man's Progress Indicator"
   s.authors     = ['MikeSmithEU']
