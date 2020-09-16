@@ -56,8 +56,8 @@ module Popro
         @info = info
 
         [
-          "elapsed: #{format_duration(elapsed)}",
-          "[#{format_duration(estimated_left)}/#{format_duration(estimated_total)}]"
+          "estimated time left: #{format_duration(estimated_left)}",
+          "[#{format_duration(elapsed)}/#{format_duration(estimated_total)}]"
         ].join(', ')
       end
 
