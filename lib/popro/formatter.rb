@@ -30,7 +30,7 @@ module Popro
       def call(info, *args)
         result = @formatter.call(info, *args)
         @longest = [@longest, result.size].max
-        "\r" + result.ljust(@longest, ' ')
+        "\r#{result.ljust(@longest, ' ')}"
       end
     end
 
@@ -40,6 +40,53 @@ module Popro
         Aggregate.new(*formatters) do |results|
           results.join separator
         end
+      end
+    end
+
+    class Estimate
+      # TODO: cleaner implementation/formatstring
+      attr_reader :info
+
+      def initialize
+        @start_time = current_time
+        @info = nil
+      end
+
+      def call(info, *_args)
+        @info = info
+
+        [
+          "elapsed: #{format_duration(elapsed)}",
+          "[#{format_duration(estimated_left)}/#{format_duration(estimated_total)}]"
+        ].join(', ')
+      end
+
+      private
+
+      def elapsed
+        current_time - @start_time
+      end
+
+      def estimated_total
+        return nil if info.current.zero? || info.total.zero?
+
+        elapsed + (info.total / info.current) * elapsed
+      end
+
+      def estimated_left
+        return nil if info.current.zero? || info.total.zero?
+
+        (info.total / info.current) * elapsed
+      end
+
+      def format_duration(secs)
+        return '??d??h??m??s' if secs.nil?
+
+        format('%02dd%02dh%02dm%02ds', secs / 86_400, secs / 3600 % 24, secs / 60 % 60, secs % 60)
+      end
+
+      def current_time
+        Process.clock_gettime(Process::CLOCK_MONOTONIC)
       end
     end
 

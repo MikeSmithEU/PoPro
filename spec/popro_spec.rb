@@ -13,8 +13,7 @@ class IndicatorStub
   end
 end
 
-RSpec.shared_examples "normal progress indication" do
-
+RSpec.shared_examples 'normal progress indication' do
 end
 
 RSpec.describe Popro do
@@ -68,6 +67,6 @@ RSpec.describe Popro do
     end
   end
 
-  it "tests" do
+  it 'tests' do
   end
 end

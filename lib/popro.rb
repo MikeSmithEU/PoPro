@@ -7,7 +7,7 @@ module Popro
 
   require_relative 'popro/progress'
 
-  def self.new(total=0, **options, &block)
+  def self.new(total = 0, **options, &block)
     raise ConfigError, 'using :total is not supported in new' if options.key?(:total) && (options[:total] != total)
 
     options[:total] = total

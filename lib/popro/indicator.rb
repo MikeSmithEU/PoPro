@@ -27,7 +27,7 @@ module Popro
         formatter = self.class.default_formatter(formatter) if formatter.nil? || formatter.is_a?(String)
 
         @formatter = formatter
-        @stream = stream || STDOUT
+        @stream = stream || $stdout
       end
 
       def call(*args)
@@ -45,11 +45,12 @@ module Popro
       end
     end
 
-    def self.default_formatter
+    def self.default_formatter(*extra_formatters)
       ::Popro::Formatter::RewriteLine.new(
         ::Popro::Formatter::Concat.new(
           ::Popro::Formatter::Spinner.new(:dots, bounce: true),
           ::Popro::Formatter::Sprintf.new,
+          *extra_formatters,
           (proc do |_, yielded = nil|
             yielded if yielded.is_a?(String) || yielded.is_a?(Numeric)
           end),
@@ -58,8 +59,8 @@ module Popro
       )
     end
 
-    def self.default
-      Stream.new(formatter: default_formatter)
+    def self.default(*extra_formatters)
+      Stream.new(formatter: default_formatter(*extra_formatters))
     end
   end
 end

@@ -54,7 +54,7 @@ module Popro
     def did(yielded = nil, amount = nil)
       @info.start unless @info.running?
       amount = @step if amount.nil?
-      raise TypeError('amount: expected an integer') unless amount.is_a? Integer
+      raise TypeError, "amount: expected an integer, got #{amount.class}" unless amount.is_a? Integer
 
       @info.current += amount unless amount.zero?
       @indicator.call(@info, yielded)
@@ -81,7 +81,7 @@ module Popro
 
     def _each(obj, total = nil, &block)
       total = obj.size if total.nil?
-      raise TypeError('total: expected an integer') unless total.is_a?(Integer) || total.nil?
+      raise TypeError, "total: expected an integer got #{total.class}" unless total.is_a?(Integer) || total.nil?
 
       @info.total += total if total.positive?
       # block = proc { |d| d } unless block_given?
