@@ -1,8 +1,24 @@
 # frozen_string_literal: true
 
+require 'popro'
+
 module Popro
   module Indicator
     require_relative 'formatter'
+
+    class Null
+      def self.new
+        self
+      end
+
+      def self.initialize
+        self
+      end
+
+      def self.call(*_args); end
+
+      def self.finish; end
+    end
 
     class Aggregate
       def initialize(*indicators)

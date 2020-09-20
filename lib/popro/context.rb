@@ -6,11 +6,13 @@ module Popro
   WILL_CHECK_MARKS ||= ' ✔'
 
   class Context
+    require_relative 'indicator'
+
     def initialize(progress:, info:, indicator:, step: 1)
       @progress = progress
-      @indicator = indicator
       @info = info
       @step = step
+      @_indicator = indicator
     end
 
     def each(obj, total = nil, &block)
@@ -39,15 +41,15 @@ module Popro
       raise OutOfSyncError, 'done while not started' unless @info.running?
 
       @info.finish
-      @indicator.finish if @indicator.respond_to? :finish
+      indicator.finish if indicator.respond_to? :finish
     end
 
     def formatter(&block)
-      unless @indicator.respond_to?(:formatter=)
-        raise ConfigError, "seems formatter is not available for #{@indicator.class}"
+      unless @_indicator.respond_to?(:formatter=)
+        raise ConfigError, "seems formatter is not available for #{@_indicator.class}"
       end
 
-      @indicator.formatter = block
+      @_indicator.formatter = block
       block
     end
 
@@ -57,14 +59,14 @@ module Popro
       raise TypeError, "amount: expected an integer, got #{amount.class}" unless amount.is_a? Integer
 
       @info.current += amount unless amount.zero?
-      @indicator.call(@info, yielded)
+      indicator.call(@info, yielded)
 
       self
     end
 
     def gonna(title)
       @info.start unless @info.running?
-      @indicator.call(@info, title)
+      indicator.call(@info, title)
       self
     end
 
@@ -91,6 +93,12 @@ module Popro
     end
 
     private
+
+    def indicator
+      return Indicator::Null if Popro.silenced?
+
+      @_indicator
+    end
 
     def _each(obj, total = nil, &block)
       total = obj.size if total.nil?

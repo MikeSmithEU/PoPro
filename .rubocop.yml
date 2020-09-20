@@ -10,4 +10,3 @@ Style/Documentation:
 Style/FrozenStringLiteralComment:
   Enabled: true
   EnforcedStyle: always_true
-  Safe: true

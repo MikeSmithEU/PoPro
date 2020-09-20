@@ -13,6 +13,10 @@ class IndicatorStub
   end
 end
 
+class Stub
+  def call; end
+end
+
 RSpec.shared_examples 'normal progress indication' do
 end
 
@@ -24,6 +28,7 @@ RSpec.describe Popro do
   end
 
   let(:iterable) { (0..9) }
+  let(:stub) { Stub.new }
   let(:indicator) { IndicatorStub.new }
 
   it 'supports each' do
@@ -59,6 +64,9 @@ RSpec.describe Popro do
     # call titler once per iteration
     iterable.each { |num| expect(titler).to receive(:call).with(num).and_call_original }
 
+    # expect one start call to the indicator
+    expect(indicator).not_to receive(:start)
+
     # expect one finish call to the indicator
     expect(indicator).to receive(:finish)
       .with(no_args).and_call_original
@@ -67,6 +75,28 @@ RSpec.describe Popro do
     end
   end
 
-  it 'tests' do
+  it 'can be silenced' do
+    expect(described_class.silenced?).to be(false)
+
+    described_class.silenced do
+      expect(described_class.silenced?).to be(true)
+
+      # expect these indications not to be called
+      expect(indicator).not_to receive(:start)
+      expect(indicator).not_to receive(:call)
+      expect(indicator).not_to receive(:finish)
+
+      # make sure block is still called
+      expect(stub).to receive(:call).exactly(iterable.size).times
+
+      described_class.each(iterable, indicator: indicator) do |num, progress:|
+        expect(progress).to be_instance_of(Popro::Info)
+
+        stub.call
+        num # rubocop:disable Lint/Void
+      end
+    end
+
+    expect(described_class.silenced?).to be(false)
   end
 end
