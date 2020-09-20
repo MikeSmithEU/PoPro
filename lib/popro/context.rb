@@ -63,6 +63,7 @@ module Popro
     end
 
     def gonna(title)
+      @info.start unless @info.running?
       @indicator.call(@info, title)
       self
     end
@@ -70,7 +71,7 @@ module Popro
     def each_gonna(obj, titler, total = nil, &block)
       _each(obj, total) do |*args|
         gonna(titler.call(*args))
-        block.call(*args, progress: @info) if block_given?
+        block.call(*args, progress: @info)
       end
     end
 
