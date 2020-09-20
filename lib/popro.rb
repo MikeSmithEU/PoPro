@@ -35,6 +35,16 @@ module Popro
     @_is_silenced = prev_silenced
   end
 
+  def self.silence!
+    @_is_silenced = true
+    self
+  end
+
+  def self.unsilence!
+    @_is_silenced = false
+    self
+  end
+
   def self.silenced?
     @_is_silenced
   end

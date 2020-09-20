@@ -1,3 +1,4 @@
+0.2.4 add support for `Popro.(un)silence!` atomic silencing, better duration formatting
 0.2.3 add support for `Popro.silenced`
 0.2.2 add gonna and each_gonna, add Callback Indicator
 0.2.1 add support for estimation and re-use of default indicator with added concatted formatters

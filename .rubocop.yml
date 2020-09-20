@@ -10,3 +10,5 @@ Style/Documentation:
 Style/FrozenStringLiteralComment:
   Enabled: true
   EnforcedStyle: always_true
+Style/FormatStringToken:
+  Enabled: false

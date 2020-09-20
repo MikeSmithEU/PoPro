@@ -63,6 +63,15 @@ module Popro
 
       private
 
+      UNITS = [
+        [60, '%02ds'],
+        [60, '%02dm'],
+        [24, '%02dh'],
+        [7, '%d days, '],
+        [52, '%d weeks, '],
+        [nil, '%d years, ']
+      ].freeze
+
       def elapsed
         current_time - @start_time
       end
@@ -80,9 +89,24 @@ module Popro
       end
 
       def format_duration(secs)
-        return '??d??h??m??s' if secs.nil?
+        return '?' if secs.nil?
 
-        format('%02dd%02dh%02dm%02ds', secs / 86_400, secs / 3600 % 24, secs / 60 % 60, secs % 60)
+        return format('%.3fs', secs) if secs < 10
+
+        format_duration_long(secs)
+      end
+
+      def format_duration_long(secs)
+        UNITS.map do |(divisor, format_str)|
+          next if secs < 1
+
+          if divisor
+            amount = secs % divisor
+            secs /= divisor
+          end
+
+          format(format_str, divisor ? amount : secs)
+        end.take_while(&:itself).reverse!.join
       end
 
       def current_time

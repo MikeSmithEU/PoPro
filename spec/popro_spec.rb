@@ -75,7 +75,7 @@ RSpec.describe Popro do
     end
   end
 
-  it 'can be silenced' do
+  it 'can be silenced in block' do
     expect(described_class.silenced?).to be(false)
 
     described_class.silenced do
@@ -97,6 +97,16 @@ RSpec.describe Popro do
       end
     end
 
+    expect(described_class.silenced?).to be(false)
+  end
+
+  it 'can be globally silenced' do
+    expect(described_class.silenced?).to be(false)
+
+    expect(described_class.silence!.silenced?).to be(true)
+    expect(described_class.silenced?).to be(true)
+
+    expect(described_class.unsilence!.silenced?).to be(false)
     expect(described_class.silenced?).to be(false)
   end
 end
